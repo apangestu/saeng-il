@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Happy Birthday</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-image: url("paper.jpg"); /* Ganti dengan path gambar yang diinginkan */
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            position: relative;
+        }
+
+        .box {
+            width: 80%; /* Menggunakan persentase untuk lebar agar responsif */
+            max-width: 800px; /* Tambahkan batas lebar maksimum */
+            height: 400px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .box::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: inherit;
+            background-size: cover;
+            background-position: center;
+            filter: blur(10px); /* Sesuaikan nilai blur sesuai kebutuhan */
+            z-index: -1;
+        }
+
+        .gif-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 70%; /* Menggunakan persentase untuk lebar agar responsif */
+            max-width: 230px; /* Tambahkan batas lebar maksimum */
+            height: 230px;
+            margin: auto;
+            margin-top: 40px; /* Sesuaikan jarak dari atas sesuai kebutuhan */
+        }
+
+        .message-container {
+            position: absolute;
+            bottom: 5%;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 18px; /* Sesuaikan ukuran teks sesuai kebutuhan */
+            font-weight: bold;
+            color: #333;
+            opacity: 0;
+            animation-name: fade;
+            animation-duration: 1s;
+            animation-fill-mode: forwards;
+        }
+
+        .start-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #fff;
+            color: orange;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .start-button-container {
+            margin-top: 20px;
+        }
+
+        @keyframes fade {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Responsif pada perangkat dengan lebar maksimum 768px */
+        @media screen and (max-width: 768px) {
+            .box {
+                width: 90%;
+            }
+
+            .gif-container {
+                width: 80%;
+            }
+            
+            .message-container {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="box">
+            <div class="gif-container">
+                <img id="gif" src="helo.gif" alt="Birthday GIF" style="width: 100%;">
+            </div>
+            <div class="message-container">
+                <div id="message"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="start-button-container">
+        <div class="start-button" onclick="startBirthday()">Pencet Aku</div>
+    </div>
+
+    <audio id="birthday-audio" src="habede.mp3" loop></audio> <!-- Ganti path_to_your_song.mp3 dengan path file lagu Anda -->
+
+    <script>
+        var gifs = [
+            "page1.gif",
+            "page2.gif",
+            "page3.gif",
+            "page4.gif",
+            "page45.gif",
+            "page5.gif",
+            "page6.gif",
+            "page7.gif",
+            "page8.gif",
+            "page9.gif",
+            "page10.gif",
+            "page105.gif",
+            "page11.gif",
+            "page12.gif",
+            "page13.gif"
+        ];
+
+        var messages = [
+            "Wahhh hari ini tanggal 4 Agustus, hari apa itu??",
+            "Yakk betul sekali, hari ulang tahunmu",
+            "Selamat Ulang Tahun Nggikk",
+            "Semoga dengan bertambahnya usia bisa menjadi pribadi yang lebih baik",
+            "Menjadi pribadi yang lebih bijaksana dan bertanggung jawab",
+            "Semoga semakin disayang oleh keluarga dan teman-teman",
+            "Selalu diberi kesehatan",
+            "Diberikan umur yang panjang",
+            "Dijauhkan dari segala macam penyakit",
+            "Dan semua cita-cita dan keinginanmu bisa tercapai",
+            "Semoga menjadi perempuan yang semakin cantik dan manis",
+            "Yang plus plus plus pokoknya",
+            "Serta",
+            "Menjadi perempuan yang semakin tangguh dan kuat",
+            "Sehingga nanti bisa menghadapi semua halangan dan rintangan yang ada",
+            "Dan jangan lupa untuk selalu bahagia",
+            "Dan jangan lupa juga",
+            "Untuk selalu tersenyum dan tertawa",
+            "Sekali lagi aku ucapkan",
+            "Anggik, Selamat Ulang Tahun yang ke 23 ya"
+        ];
+
+        var gifElement = document.getElementById("gif");
+        var messageElement = document.getElementById("message");
+        var startButtonContainer = document.querySelector(".start-button-container");
+        var audio = document.getElementById("birthday-audio");
+
+        var gifIndex = 0;
+        var messageIndex = 0;
+        var isStarted = false;
+
+        function showMessage() {
+            if (messageIndex === messages.length) {
+                clearInterval(messageInterval);
+                return;
+            }
+
+            var message = messages[messageIndex];
+            messageElement.innerHTML = message;
+            var messageContainer = document.querySelector(".message-container");
+            messageContainer.style.animationName = "none";
+            setTimeout(function() {
+                messageContainer.style.animationName = "fade";
+            }, 100);
+
+            messageIndex++;
+        }
+
+        function showNextGif() {
+            if (gifIndex === gifs.length) {
+                gifIndex = 0;
+            }
+
+            var gifPath = gifs[gifIndex];
+            gifElement.src = gifPath;
+
+            gifIndex++;
+        }
+
+        function startBirthday() {
+            if (!isStarted) {
+                isStarted = true;
+                startButtonContainer.style.display = "none";
+                audio.currentTime = 0;
+                audio.play();
+                showMessage();
+                showNextGif();
+                messageInterval = setInterval(showMessage, 5200);
+                gifInterval = setInterval(showNextGif, 5700);
+            }
+        }
+
+        audio.addEventListener("ended", function() {
+            audio.currentTime = 0;
+            audio.play();
+        });
+    </script>
+</body>
+</html>
